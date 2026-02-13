@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¿Quieres ser mi San Valentín? ❤️</title>
+    <style>
+        :root {
+            --rosa-fondo: #ffcbd1;
+            --rosa-fuerte: #ff4d6d;
+            --blanco: #ffffff;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: var(--rosa-fondo);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            touch-action: manipulation;
+        }
+
+        /* Lluvia de corazones */
+        .corazon-flotante {
+            position: absolute;
+            color: #ff4d6d;
+            font-size: 20px;
+            user-select: none;
+            pointer-events: none;
+            animation: caer linear infinite;
+            z-index: 0;
+        }
+
+        @keyframes caer {
+            0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* Tarjeta principal */
+        .card {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px 30px;
+            border-radius: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            text-align: center;
+            z-index: 10;
+            max-width: 320px;
+            width: 90%;
+            border: 4px solid var(--blanco);
+            animation: aparecer 0.8s ease-out;
+        }
+
+        @keyframes aparecer {
+            from { opacity: 0; transform: scale(0.5); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .img-osito {
+            width: 160px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: var(--rosa-fuerte);
+            font-size: 26px;
+            margin-bottom: 30px;
+            line-height: 1.2;
+        }
+
+        .botones {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            height: 100px;
+            position: relative;
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        #btn-si {
+            background-color: var(--rosa-fuerte);
+            color: white;
+            z-index: 11;
+        }
+
+        #btn-no {
+            background-color: #f0f0f0;
+            color: #666;
+            position: absolute;
+            z-index: 12;
+        }
+
+        /* Pantalla final */
+        #pantalla-final {
+            display: none;
+        }
+
+        .texto-final {
+            color: #444;
+            font-size: 18px;
+            margin-top: 10px;
+        }
+
+        #cerrar-btn {
+            background-color: var(--rosa-fuerte);
+            color: white;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="card" id="pregunta">
+        <img src="imagenes/fe00dbc361fd71e9928ba96cebea16a5.jpg" class="img-osito">
+        <h1>¿Quieres ser mi San Valentín? ❤️</h1>
+        <div class="botones">
+            <button id="btn-si">Si</button>
+            <button id="btn-no">No</button>
+        </div>
+    </div>
+
+    <div class="card" id="pantalla-final">
+        <img src="imagenes/-869922692.png" class="img-osito">
+        <h1>Sabía que dirías que sí ❤️</h1>
+        <p class="texto-final">Eres demasiado especial para mí.</p>
+        <button id="cerrar-btn" onclick="location.reload()">Cerrar</button>
+    </div>
+
+    <script>
+        const btnNo = document.getElementById('btn-no');
+        const btnSi = document.getElementById('btn-si');
+        const preg = document.getElementById('pregunta');
+        const final = document.getElementById('pantalla-final');
+        let escalaSi = 1;
+
+        // 1. Lluvia de corazones automática
+        function crearCorazon() {
+            const corazon = document.createElement('div');
+            corazon.classList.add('corazon-flotante');
+            corazon.innerHTML = '💘  💕';
+            corazon.style.left = Math.random() * 100 + "vw";
+            corazon.style.animationDuration = Math.random() * 2 + 3 + "s";
+            document.body.appendChild(corazon);
+            setTimeout(() => corazon.remove(), 5000);
+        }
+        setInterval(crearCorazon, 300);
+
+        // 2. Mover botón No y agrandar el Sí
+        function huir() {
+            // Posición aleatoria
+            const x = Math.random() * (window.innerWidth - btnNo.offsetWidth);
+            const y = Math.random() * (window.innerHeight - btnNo.offsetHeight);
+            btnNo.style.position = "fixed";
+            btnNo.style.left = x + "px";
+            btnNo.style.top = y + "px";
+
+            // Agrandar botón Si
+            escalaSi += 0.2;
+            btnSi.style.transform = `scale(${escalaSi})`;
+        }
+
+        btnNo.addEventListener('mouseover', huir);
+        btnNo.addEventListener('touchstart', (e) => { e.preventDefault(); huir(); });
+
+        // 3. Click en Sí
+        btnSi.addEventListener('click', () => {
+            preg.style.display = 'none';
+            final.style.display = 'block';
+            // Lanzar muchos corazones al final
+            for(let i=0; i<30; i++) setTimeout(crearCorazon, i*10);
+        });
+    </script>
+</body>
+</html>
